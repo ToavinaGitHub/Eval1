@@ -1,0 +1,104 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='construction')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header(title='Construction')}"></header>
+<aside th:replace="~{fragments/aside :: aside}"></aside>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>construction</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">construction</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <!-- Affichage message-->
+        <div th:replace="~{fragments/message :: MessageAlert}"></div>
+        <!-- Fin Affichage message-->
+        <div class="row">
+            <form th:object="${construction}"  method="post" th:action="@{'/v1/construction/user/addDevis'}">
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{etat}">
+                <input type="hidden" th:field="*{fin}">
+                <input type="hidden" th:field="*{devis}">
+                <div class="col-md-12">
+                    <hr>
+                    <span>Choisir type de maison:</span>
+                    <div class="row justify-content-center">
+                        <div th:each="typeMaison : ${allTypeMaison}" class="card col-md-3 text-center">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${typeMaison.getDesignation()}"></h5>
+                                <p class="card-text">Prix : <span th:text="${typeMaison.getPrix()}"> AR</span></p>
+                                <p class="card-text">Duration: <span th:text="${typeMaison.getDuree()}"> jours</span></p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="typeMaison"  th:value="${typeMaison.getIdTypeMaison()}" th:id="${typeMaison.getIdTypeMaison()}">
+                                    <label class="form-check-label" th:for="${typeMaison.getIdTypeMaison()}">
+                                        <a class="btn btn-outline-primary">Select</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <span>Choisir type de finition:</span>
+                    <div class="row justify-content-center">
+                        <div th:each="typeFinition : ${allTypeFinition}" class="card col-md-3 text-center">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${typeFinition.getDesignation()}"></h5>
+                                <p class="card-text" th:text="${typeFinition.getAugmentation()+' % '}"></p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" th:field="*{typeFinition}" th:id="${typeFinition.getId()}" th:value="${typeFinition.getId()}">
+                                    <label class="form-check-label" th:for="${typeFinition.getId()}">
+                                        <a class="btn btn-outline-primary">Select</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="col-12">
+                        <label for="demande" class="form-label">Demande : *</label>
+                        <textarea type="text" th:field="*{demande}"  class="form-control" id="demande" data-parsley-trigger="change" required=""></textarea>
+                    </div>
+                    <hr>
+                    <div class="col-12">
+                        <label for="datyDevis" class="form-label">Date de devis : *</label>
+                        <input type="date" th:field="*{daty}"  class="form-control" id="datyDevis" data-parsley-trigger="change" required="">
+                    </div>
+                    <hr>
+                    <div class="col-12">
+                        <label for="datyDebut" class="form-label">Date debut travaux : *</label>
+                        <input type="date"  th:field="*{debut}" class="form-control" id="datyDebut" data-parsley-trigger="change" required="">
+                    </div>
+                    <hr>
+                    <div class="col-12">
+                        <input class="btn btn-primary w-100" type="submit" value="Ajouter devis">
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </section>
+
+</main>
+</body>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<div th:replace="~{fragments/script :: script}"></div>
+<!--delete modal -->
+<div th:replace="~{fragments/DeleteConfirmation :: Delete}"></div>
+<!-- fin delete modal -->
+<script>
+    $(document).ready(function() {
+        $('#formValidation').parsley();
+    });
+
+</script>
+
+</html>

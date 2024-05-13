@@ -1,0 +1,57 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='construction')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header(title='Construction')}"></header>
+<aside th:replace="~{fragments/aside :: aside}"></aside>
+
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>construction</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active">Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <!-- Affichage message-->
+    <div th:replace="~{fragments/message :: MessageAlert}"></div>
+    <!-- Fin Affichage message-->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card justify-content-center text-center">
+          <div class="card-body">
+            <h5 class="card-title">TOTAL DEVIS :<span  class="btn btn-outline-primary" th:text="${total}"></span> Ariary</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <nav th:replace="~{fragments/Pagination :: Pagination('/v1/construction/user')}">
+      </nav>
+      <!-- Fin Pagination -->
+
+
+
+    </div>
+  </section>
+
+</main>
+</body>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<div th:replace="~{fragments/script :: script}"></div>
+<!--delete modal -->
+<div th:replace="~{fragments/DeleteConfirmation :: Delete}"></div>
+<!-- fin delete modal -->
+<script>
+  $(document).ready(function() {
+    $('#formValidation').parsley();
+  });
+
+</script>
+
+</html>

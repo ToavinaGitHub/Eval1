@@ -1,0 +1,86 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='construction')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header(title='Construction')}"></header>
+<aside th:replace="~{fragments/aside :: aside}"></aside>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>construction</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">construction</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <!-- Affichage message-->
+        <div th:replace="~{fragments/message :: MessageAlert}"></div>
+        <!-- Fin Affichage message-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Details Devis</h5>
+                        <div th:each="entry : ${all}">
+                            <!-- Affichage du type de travail -->
+                            <h5 th:text="${entry.key.getDesignation()}"></h5>
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Numero</th>
+                                    <th scope="col">Designation</th>
+                                    <th scope="col">Unite</th>
+                                    <th scope="col">Quantite</th>
+                                    <th scope="col">Prix Unitaire</th>
+                                    <th scope="col">Montant total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Boucle sur la liste de TravauxConstruction pour ce type de travail -->
+                                <tr th:each="construction : ${entry.value}">
+                                    <td th:text="${construction.getNumero()}"></td>
+                                    <td th:text="${construction.getDesignation()}"></td>
+                                    <td th:text="${construction.getUnite().getDesignation()}"></td>
+                                    <td th:text="${construction.getQuantite()}"></td>
+                                    <td th:text="${construction.getPrixUnitaire()}"></td>
+                                    <td th:text="${construction.getMontantTotal()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav th:replace="~{fragments/Pagination :: Pagination('/v1/construction/user')}">
+            </nav>
+            <!-- Fin Pagination -->
+
+
+
+        </div>
+    </section>
+
+</main>
+</body>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<div th:replace="~{fragments/script :: script}"></div>
+<!--delete modal -->
+<div th:replace="~{fragments/DeleteConfirmation :: Delete}"></div>
+<!-- fin delete modal -->
+<script>
+    $(document).ready(function() {
+        $('#formValidation').parsley();
+    });
+
+</script>
+
+</html>

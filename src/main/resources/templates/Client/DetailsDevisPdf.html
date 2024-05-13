@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details Devis</title>
+    <!-- Link vers Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Votre CSS personnalisé -->
+    <style>
+        /* Ajoutez votre CSS personnalisé ici */
+        .section {
+            padding: 50px 0;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+        }
+
+        .card-title {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .table {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table thead th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .table tbody td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+<main id="main" class="main">
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Details Devis</h5>
+                            <div th:each="entry : ${all}">
+                                <!-- Affichage du type de travail -->
+                                <h5 th:text="${entry.key.getDesignation()}"></h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Numero</th>
+                                        <th scope="col">Designation</th>
+                                        <th scope="col">Unite</th>
+                                        <th scope="col">Quantite</th>
+                                        <th scope="col">Prix Unitaire</th>
+                                        <th scope="col">Montant total</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- Boucle sur la liste de TravauxConstruction pour ce type de travail -->
+                                    <tr th:each="construction : ${entry.value}">
+                                        <td th:text="${construction.getNumero()}"></td>
+                                        <td th:text="${construction.getDesignation()}"></td>
+                                        <td th:text="${construction.getUnite().getDesignation()}"></td>
+                                        <td th:text="${construction.getQuantite()}"></td>
+                                        <td th:text="${construction.getPrixUnitaire()}"></td>
+                                        <td th:text="${construction.getMontantTotal()}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>
