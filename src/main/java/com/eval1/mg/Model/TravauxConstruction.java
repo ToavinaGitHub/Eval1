@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "travaux_construction")
 @Getter
@@ -80,5 +83,15 @@ public class TravauxConstruction {
         this.etatString = EtatConfiguration.getEtatTravaux(etat);
     }
 
+    public double getTotal(ArrayList<TravauxConstruction> allTravaux){
+        double res = 0;
+        System.out.println("haha");
+        for (TravauxConstruction t:allTravaux
+             ) {
+            res+=t.getMontantTotal();
+        }
+
+        return res;
+    }
 
 }

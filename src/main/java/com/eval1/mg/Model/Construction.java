@@ -59,6 +59,11 @@ public class Construction {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date fin;
 
+
+    @ManyToOne
+            @JoinColumn(name = "id_etat_construction",nullable = true)
+    EtatConstruction etatConstruction;
+
     int etat;
 
     @Transient

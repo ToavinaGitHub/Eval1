@@ -23,4 +23,7 @@ public class EtatTravaux {
     @NotBlank(message = "Designation etat travaux ne doit pas etre vide")
     String designation;
 
+    public EtatTravaux(int id) {
+        this.id = id;
+    }
 }

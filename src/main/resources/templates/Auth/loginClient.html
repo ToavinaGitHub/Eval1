@@ -22,10 +22,10 @@
                                 <div class="pt-4 pb-2">
                                     <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
                                 </div>
-                                <form id="formValidation" class="row g-3"  method="post" th:action="@{/login}" th:object="${utilisateur}"  data-parsley-validate="">
+                                <form id="formValidation" class="row g-3"  method="post" th:action="@{/loginClient}" th:object="${utilisateur}"  data-parsley-validate="">
                                     <div class="col-12">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="text" th:field="*{contact}" value="admin@gmail.com" class="form-control" id="email" data-parsley-trigger="change" required="">
+                                        <input type="text" th:field="*{contact}" data-parsley-pattern="^(020|032|033|034|038)\d{7}$" class="form-control" id="email" data-parsley-trigger="change" required="">
                                     </div>
                                     <div class="col-12">
                                         <input class="btn btn-primary w-100" type="submit" value="Login">

@@ -28,14 +28,30 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <form id="formValidation" th:action="@{'/v1/dashboard'}" method="get">
+                <div class="col-md-3 input-group mt-2">
+                  <div class="form-control">
+                    <input  class="form-control-sm"  data-parsley-pattern="^(0|[1-9][0-9]*)$" th:value="${annee}" type="text" name="anne" data-parsley-trigger="change">
+                    <input  class="btn btn-outline-primary" type="submit" value="Search">
+                  </div>
+                </div>
+                <!-- Filtrage de nombre de donnée-->
+              </form>
+            </div>
+            <div class="card-body">
+              <h4>Repartition des montants de vente</h4>
+              <div style="width: 50%;">
+                <canvas id="camembertChart"></canvas>
+              </div>
+            </div>
+          </div>
 
-      <!-- Pagination -->
-      <nav th:replace="~{fragments/Pagination :: Pagination('/v1/construction/user')}">
-      </nav>
-      <!-- Fin Pagination -->
-
-
-
+        </div>
+      </div>
     </div>
   </section>
 
@@ -47,6 +63,52 @@
 <!--delete modal -->
 <div th:replace="~{fragments/DeleteConfirmation :: Delete}"></div>
 <!-- fin delete modal -->
+<script th:inline="javascript">
+  /*<![CDATA[*/
+
+  // Récupérer les variables passées depuis le contrôleur
+  var valeurs = /*[[${allMontant}]]*/ [];
+  var labels = /*[[${allMois}]]*/ [];
+
+  console.log(valeurs)
+  console.log(labels)
+  // Convertir les valeurs en chaînes JSON
+
+  // Données du graphique en camembert
+  var data = {
+    labels: labels,
+    datasets: [{
+      label:"Mois",
+      data: valeurs,
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+    }]
+  };
+
+  // Options du graphique en camembert
+  var options = {
+    responsive: true,
+    title: {
+      display: true,
+      text: 'Graphique en bar'
+    },
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  };
+
+  // Récupérer le canevas HTML
+  var ctx = document.getElementById('camembertChart').getContext('2d');
+
+  // Créer le graphique en camembert
+  var camembertChart = new Chart(ctx, {
+    type: 'bar',
+    data:data,
+    options: options
+  });
+  /*]]>*/
+</script>
 <script>
   $(document).ready(function() {
     $('#formValidation').parsley();

@@ -1,5 +1,6 @@
 package com.eval1.mg.Security;
 
+import com.eval1.mg.Model.Profil;
 import com.eval1.mg.Model.Utilisateur;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,12 +29,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return (user.getProfil() == Profil.CLIENT) ? user.getContact() : user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return (user.getProfil() == Profil.CLIENT) ? user.getContact() : user.getEmail();
     }
 
     @Override

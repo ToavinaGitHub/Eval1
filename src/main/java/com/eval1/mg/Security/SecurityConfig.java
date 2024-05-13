@@ -33,8 +33,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(
                         auth -> {
-                            auth.requestMatchers("/" ,"/login","/insc","/inscription" ,"/error/403","/error/404" ,"/vendor/**" ,"/css/**","/img/**","/jquery/**","/js/**","/parsley/**","/scss/**").permitAll();
-                            auth.requestMatchers("/v1/metier","/v1/typeTravail" ).hasRole("ADMIN");
+                            auth.requestMatchers("/" ,"/login","/insc","/loginClient","/inscription" ,"/error/403","/error/404" ,"/vendor/**" ,"/css/**","/img/**","/jquery/**","/js/**","/parsley/**","/scss/**").permitAll();
+                            auth.requestMatchers("/v1/metier","/v1/typeTravail","/v1/dashboard","/v1/construction/admin/**" ).hasRole("ADMIN");
+
 
                             /*auth.requestMatchers("/rh").hasRole("RH");
                             auth.requestMatchers("/service").hasRole("SERVICE");

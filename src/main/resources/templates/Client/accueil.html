@@ -65,13 +65,13 @@
                 <th scope="row" th:text="${construction.getIdConstruction()}"></th>
                 <td th:text="${construction.getDesignationMaison()}"></td>
                 <td th:text="${construction.getDesignationFinition()}"></td>
-                <td th:text="${construction.getDaty()}"></td>
-                <td th:text="${construction.getDebut()}"></td>
-                <td th:text="${construction.getFin()}"></td>
-                <td th:text="${construction.getTotal()}"></td>
-                <td th:text="${construction.getDejaPaye()}"></td>
-                <td th:text="${construction.getReste()}"></td>
-                <td th:text="${T(com.eval1.mg.Model.EtatConfiguration).getEtatConstruction(construction.getEtat())}"></td>
+                <td th:text="${#dates.format(construction.getDaty(), 'yyyy-MM-dd')}"></td>
+                <td th:text="${#dates.format(construction.getDebut(),'yyyy-MM-dd')}"></td>
+                <td th:text="${#dates.format(construction.getFin(),'yyyy-MM-dd')}"></td>
+                <td th:text="${#numbers.formatCurrency(construction.getTotal())}"></td>
+                <td th:text="${#numbers.formatCurrency(construction.getDejaPaye())}"></td>
+                <td th:text="${#numbers.formatCurrency(construction.getReste())}"></td>
+                <td th:text="${construction.getDesignationEtat()}"></td>
                 <td>
                   <form method="post" th:action="@{'/v1/payement'}">
                      <input type="hidden" name="idContruction" th:value="${construction.getIdConstruction()}">

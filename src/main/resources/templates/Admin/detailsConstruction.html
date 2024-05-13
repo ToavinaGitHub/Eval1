@@ -12,7 +12,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">construction</li>
+                <li class="breadcrumb-item active">Details Devis</li>
             </ol>
         </nav>
     </div>
@@ -29,16 +29,16 @@
                         <h5 class="card-title">Details Devis</h5>
                         <div th:each="entry : ${all}">
                             <!-- Affichage du type de travail -->
-                            <h5 th:text="${entry.key.getDesignation()}"></h5>
+                            <h5><strong th:text="${entry.getKey().getNumero()+' - '+entry.key.getDesignation()}"></strong></h5>
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th scope="col">Numero</th>
-                                    <th scope="col">Designation</th>
-                                    <th scope="col">Unite</th>
-                                    <th scope="col">Quantite</th>
-                                    <th scope="col">Prix Unitaire</th>
-                                    <th scope="col">Montant total</th>
+                                    <th style="width: 10%" scope="col">Numero</th>
+                                    <th style="width: 20%" scope="col">Designation</th>
+                                    <th style="width: 15%" scope="col">Unite</th>
+                                    <th style="width: 15%" scope="col">Quantite</th>
+                                    <th style="width: 20%" scope="col">Prix Unitaire</th>
+                                    <th style="width: 20%" scope="col">Montant total</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -51,20 +51,20 @@
                                     <td th:text="${construction.getPrixUnitaire()}"></td>
                                     <td th:text="${construction.getMontantTotal()}"></td>
                                 </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>TOTAL</strong></td>
+                                    <td><strong th:text="${tr.getTotal(entry.value)}"></strong></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Pagination -->
-            <nav th:replace="~{fragments/Pagination :: Pagination('/v1/construction/user')}">
-            </nav>
-            <!-- Fin Pagination -->
-
-
-
         </div>
     </section>
 

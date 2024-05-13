@@ -1,7 +1,7 @@
 <aside  th:fragment="aside" id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link ">
+            <a class="nav-link" th:href="@{'/v1/dashboard'}">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
@@ -9,17 +9,33 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-journal-check"></i><span>Premier</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-journal-check"></i><span>Devis Client</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a  >
-                        <i class="bi bi-circle"></i><span>Premier</span>
+                    <a th:href="@{'/v1/construction/user'}">
+                        <i class="bi bi-circle"></i><span>Liste de mes devis</span>
                     </a>
                 </li>
-
+                <li>
+                    <a th:href="@{'/v1/construction/user/addDevis'}">
+                        <i class="bi bi-circle"></i><span>Ajouter devis</span>
+                    </a>
+                </li>
             </ul>
-        </li><!-- End Components Nav -->
+        </li>
+        <li class="nav-item" th:if="${session.user.getProfil().name()==T(com.eval1.mg.Model.Profil).ADMIN.name()}">
+            <a class="nav-link collapsed" data-bs-target="#components-nav2" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-journal-check"></i><span>Devis BTP</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-nav2" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a th:href="@{'/v1/construction/admin'}">
+                        <i class="bi bi-circle"></i><span>Liste des devis</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
         <li class="nav-heading">Autre</li>
 

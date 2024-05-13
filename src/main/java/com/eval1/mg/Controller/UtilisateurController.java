@@ -1,10 +1,12 @@
 package com.eval1.mg.Controller;
 
 import com.eval1.mg.Exception.ValeurInvalideException;
+import com.eval1.mg.Model.Profil;
 import com.eval1.mg.Model.Utilisateur;
 
 import com.eval1.mg.Repository.UtilisateurRepository;
 
+import com.eval1.mg.Security.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -15,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,47 +63,52 @@ public class UtilisateurController {
 	@PostMapping("/loginClient")
 	public String loginClient(Utilisateur u, RedirectAttributes redirectAttributes, HttpSession session, HttpServletRequest request){
 
-		Utilisateur user  = utilisateurRepository.findUtilisateurByContact(u.getEmail());
+		Utilisateur user = utilisateurRepository.findUtilisateurByContact(u.getContact());
 
 		if(user==null){
-			//redirectAttributes.addFlashAttribute("error" , "Mot de passe ou email non valide");
-
-
-			return "redirect:/";
+			user = new Utilisateur();
+			user.setProfil(Profil.CLIENT);
+			user.setGenre(1);
+			user.setContact(u.getContact());
+			user = utilisateurRepository.save(user);
 		}
 
-		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(u.getEmail(), u.getPassword());
+		UserDetails userDetails = new CustomUserDetails(user);
 
-		Authentication authentication = authenticationManager.authenticate(authRequest);
-		SecurityContext sc = SecurityContextHolder.getContext();
-		sc.setAuthentication(authentication);
+		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+		// Définissez le contexte de sécurité avec cette authentification
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		HttpSession s = request.getSession(true);
-		session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+		session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+
+
+		System.out.println(user.getProfil());
 
 		session.setAttribute("user" , user);
 
+		System.out.println(user.getContact());
 
+		// Redirigez vers la page d'accueil ou toute autre page appropriée
 		return "redirect:/v1/accueil";
 	}
-
 
 
 	@PostMapping("/login")
 	public String login(Utilisateur u, RedirectAttributes redirectAttributes, HttpSession session, HttpServletRequest request){
 
 		Utilisateur user  = utilisateurRepository.findUtilisateurByEmail(u.getEmail());
-
 		if(user==null || !passwordEncoder.matches(u.getPassword(),user.getPassword())){
 			redirectAttributes.addFlashAttribute("error" , "Mot de passe ou email non valide");
 			return "redirect:/";
 		}
-
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(u.getEmail(), u.getPassword());
 
 		Authentication authentication = authenticationManager.authenticate(authRequest);
 		SecurityContext sc = SecurityContextHolder.getContext();
 		sc.setAuthentication(authentication);
+
 
 		HttpSession s = request.getSession(true);
 		session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);

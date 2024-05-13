@@ -28,6 +28,6 @@ public interface V_construction_complet {
 
     String getContactUser();
 
-
+    String getDesignationEtat();
 
 }

@@ -64,6 +64,9 @@ public class ConstructionController {
     @Autowired
     ServletContext servletContext;
 
+    @Autowired
+    EtatConstructionRepository etatConstructionRepository;
+
     private final TemplateEngine templateEngine;
 
     public ConstructionController(TemplateEngine templateEngine) {
@@ -75,8 +78,6 @@ public class ConstructionController {
     public String index(Model model , @RequestParam(name = "keyword" ,required = false ,defaultValue="") String key,
                         @RequestParam(defaultValue = "1" , required = false ,name = "page") int page, @RequestParam(defaultValue = "3" , required = false ,name = "size") int size,
                         @RequestParam(defaultValue = "idConstruction", required = false, name = "sortField") String sortField, @RequestParam(defaultValue = "asc", required = false, name = "sortOrder") String sortOrder, HttpServletRequest request) throws ParseException {
-
-
 
         List<V_construction_complet> constructions = new ArrayList<V_construction_complet>();
 
@@ -131,6 +132,9 @@ public class ConstructionController {
         }
         try{
             construction.setEtat(0);
+            construction.setEtatConstruction(etatConstructionRepository.getById(0));
+
+
             construction.setDaty(new Date());
             construction.setUtilisateur(((Utilisateur) request.getSession().getAttribute("user")));
             constructionRepository.save(construction);
@@ -229,6 +233,7 @@ public class ConstructionController {
         }
         try{
             construction.setEtat(0);
+            construction.setEtatConstruction(etatConstructionRepository.getById(0));
 
             System.out.println(typeMaison);
             TypeMaison t = typeMaisonRepository.findById(typeMaison).get();
@@ -327,11 +332,12 @@ public class ConstructionController {
     @GetMapping("/admin/details")
     public String toDetailsConstruction(@RequestParam(name = "idConstruction") String idConstruction,Model model){
 
-
         Construction c = constructionRepository.getById(idConstruction);
         List<TravauxConstruction> all = travauxConstructionRepository.findTravauxConstructionByConstruction(c);
         HashMap<TypeTravail,List<TravauxConstruction>> a = constructionService.getTravauxParTravail(all);
         model.addAttribute("all",a);
+
+        model.addAttribute("tr",new TravauxConstruction());
 
         return "Admin/detailsConstruction";
     }
@@ -345,6 +351,7 @@ public class ConstructionController {
         Context context = new Context();
 
         context.setVariable("all", a);
+        context.setVariable("tr",new TravauxConstruction());
 
         String orderHtml = templateEngine.process("Client/detailsDevisPdf", context);
 
