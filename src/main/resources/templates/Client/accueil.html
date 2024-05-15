@@ -68,9 +68,9 @@
                 <td th:text="${#dates.format(construction.getDaty(), 'yyyy-MM-dd')}"></td>
                 <td th:text="${#dates.format(construction.getDebut(),'yyyy-MM-dd')}"></td>
                 <td th:text="${#dates.format(construction.getFin(),'yyyy-MM-dd')}"></td>
-                <td th:text="${#numbers.formatCurrency(construction.getTotal())}"></td>
-                <td th:text="${#numbers.formatCurrency(construction.getDejaPaye())}"></td>
-                <td th:text="${#numbers.formatCurrency(construction.getReste())}"></td>
+                <td th:text="${#numbers.formatDecimal(construction.getTotal(),1,'COMMA',2,'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(construction.getDejaPaye(),1,'COMMA',2,'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(construction.getReste(),1,'COMMA',2,'POINT')}"></td>
                 <td th:text="${construction.getDesignationEtat()}"></td>
                 <td>
                   <form method="post" th:action="@{'/v1/payement'}">

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import org.springframework.ui.Model;
+
 import org.thymeleaf.TemplateEngine;
 
 @RequestMapping("/v1/construction/")
@@ -49,7 +50,13 @@ public class ConstructionController {
     private TypeFinitionRepository typeFinitionRepository;
 
     @Autowired
+    private TypeTravailRepository typeTravailRepository;
+
+    @Autowired
     private ConstructionService constructionService;
+
+    @Autowired
+    PayementRepository payementRepository;
 
     @Autowired
     DevisRepository devisRepository;
@@ -254,19 +261,18 @@ public class ConstructionController {
             construction.setFin(fin);
             construction.setUtilisateur(((Utilisateur) request.getSession().getAttribute("user")));
             construction.setDuree(t.getDuree());
+            construction.setPrixMaison(t.getPrix());
             Construction a = constructionRepository.save(construction);
 
 
             List<Travaux> allTravaux = travauxRepository.findTravauxByDevis(d);
             for (Travaux tr:allTravaux
             ) {
-                TravauxConstruction parent = null;
-                if(tr.getTravaux()!=null){
-                    parent = travauxConstructionRepository.getTravauxConstructionByConstructionAndNumero(construction.getId(),tr.getNumero());
-                    //System.out.println("tsy null" + parent.getConstruction()+"--"+parent.getNumero());
-                }
-                TravauxConstruction tvx = new TravauxConstruction(tr.getNumero(),tr.getDesignation(),tr.getPrixUnitaire(),tr.getQuantite(),tr.getMontantTotal(),0,tr.getTypeTravail(),tr.getUnite(),parent);
+                TravauxConstruction tvx = new TravauxConstruction(tr.getNumero(),tr.getDesignation(),tr.getPrixUnitaire(),tr.getQuantite(),tr.getMontantTotal(),0,tr.getTypeTravail(),tr.getUnite(),null);
                 tvx.setConstruction(a);
+                tvx.setTypeTravail(typeTravailRepository.getById(3));
+
+
 
                 travauxConstructionRepository.save(tvx);
             }
@@ -334,8 +340,8 @@ public class ConstructionController {
 
         Construction c = constructionRepository.getById(idConstruction);
         List<TravauxConstruction> all = travauxConstructionRepository.findTravauxConstructionByConstruction(c);
-        HashMap<TypeTravail,List<TravauxConstruction>> a = constructionService.getTravauxParTravail(all);
-        model.addAttribute("all",a);
+        //HashMap<TypeTravail,List<TravauxConstruction>> a = constructionService.getTravauxParTravail(all);
+        model.addAttribute("all",all);
 
         model.addAttribute("tr",new TravauxConstruction());
 
@@ -346,11 +352,17 @@ public class ConstructionController {
     public void toPdf(@RequestParam("idConstruction") String idConstruction, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes, Model model) throws IOException, IOException {
         Construction c = constructionRepository.getById(idConstruction);
         List<TravauxConstruction> all = travauxConstructionRepository.findTravauxConstructionByConstruction(c);
-        HashMap<TypeTravail,List<TravauxConstruction>> a = constructionService.getTravauxParTravail(all);
+        //HashMap<TypeTravail,List<TravauxConstruction>> a = constructionService.getTravauxParTravail(all);
 
         Context context = new Context();
 
-        context.setVariable("all", a);
+        List<Payement> allP = payementRepository.findPayementByConstruction(c);
+
+        double sommePaye = payementRepository.getSommePayeParConstruction(c.getId());
+
+        context.setVariable("allPayement" ,allP);
+        context.setVariable("montantPaye",sommePaye);
+        context.setVariable("all", all);
         context.setVariable("tr",new TravauxConstruction());
 
         String orderHtml = templateEngine.process("Client/detailsDevisPdf", context);

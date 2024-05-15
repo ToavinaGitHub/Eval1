@@ -23,6 +23,8 @@ public class DashboardController {
 
         double a = constructionRepository.getSommeDevis();
 
+        double paye = constructionRepository.getMontantTotalPayement();
+
         model.addAttribute("total",a);
 
         List<V_devis_mois_annee> stats = constructionRepository.getDevisMoisAnnee(Integer.parseInt(anne));
@@ -38,6 +40,7 @@ public class DashboardController {
         }
 
         model.addAttribute("annee",anne);
+        model.addAttribute("dejaPaye",paye);
         model.addAttribute("allMois" ,allMois);
         model.addAttribute("allMontant" ,montant);
 

@@ -25,6 +25,8 @@ public class HistoriquePrixTravaux
             @JoinColumn(name = "id_travaux",nullable = false)
     Travaux travaux;
 
+    String designation;
+
     double prixUnitaire;
 
     double quantite;
@@ -32,4 +34,9 @@ public class HistoriquePrixTravaux
     Date daty;
 
     int etat;
+
+    @ManyToOne
+            @JoinColumn(name = "idUnite")
+    Unite unite;
+
 }

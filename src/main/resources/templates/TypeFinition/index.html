@@ -21,17 +21,16 @@
         <div th:replace="~{fragments/message :: MessageAlert}"></div>
         <!-- Fin Affichage message-->
         <div class="row">
-            <div class="col-md-3">
+            <div th:if="${isUpdate}" class="col-md-3">
                 <div class="card">
                     <div class=" card-body">
-                        <h5 class="card-title" th:if="${isUpdate == null}">Insertion de typeFinition</h5>
-                        <h5 class="card-title" th:if="${isUpdate}">Modification de typeFinition</h5>
+                         <h5 class="card-title" th:if="${isUpdate}">Modification de typeFinition</h5>
                         <form class="row g-3" method="post" th:action="${isUpdate==null ? '/v1/typeFinition' : '/v1/typeFinition/edit'}" th:object="${typeFinition}" encType="multipart/form-data">
                             <input type="hidden" th:field="*{id}">
                             <input type="hidden" th:field="*{etat}">
                             <div class="col-md-12">
-                                <label for="inputName5" class="form-label">Designation</label>
-                                <input type="text" th:field="*{designation}" class="form-control" id="inputName5" data-parsley-trigger="change" required="" >
+                                <label  for="inputName5" class="form-label">Designation</label>
+                                <input type="text" th:field="*{designation}" class="form-control" id="inputName5" data-parsley-trigger="change" required="">
                             </div>
                             <div class="col-md-12">
                                 <label for="augmentation" class="form-label">Augmentation</label>
@@ -76,8 +75,7 @@
                                 <td th:text="${typeFinition.getAugmentation()}"></td>
                                 <td>
                                     <a th:href="@{'/v1/typeFinition/' + ${typeFinition.getId()}}"><button class="btn btn-warning"  ><i class="bi bi-pencil-square"></i></button></a>
-                                    <a th:href="@{'/v1/typeFinition/delOption?id=' + ${typeFinition.getId()}} " class="btn-delete"><button  class="btn btn-danger"><i class="bi bi-trash"></i></button></a>
-                                </td>
+                                  </td>
                             </tr>
                             </tbody>
                         </table>

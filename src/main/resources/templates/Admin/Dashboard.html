@@ -24,7 +24,10 @@
       <div class="col-md-12">
         <div class="card justify-content-center text-center">
           <div class="card-body">
-            <h5 class="card-title">TOTAL DEVIS :<span  class="btn btn-outline-primary" th:text="${total}"></span> Ariary</h5>
+            <h5 class="card-title" th:if="${total!=null}">TOTAL DEVIS :<span   class="btn btn-outline-primary" th:text="${#numbers.formatCurrency(total)}"></span> Ariary</h5>
+            <h5 class="card-title" th:if="${total==null}">TOTAL DEVIS :<span   class="btn btn-outline-primary" >0.0</span> Ariary</h5>
+            <h5 class="card-title" th:if="${dejaPaye!=null}" >MONTANT DEJA PAYE :<span  class="btn btn-outline-primary" th:text="${#numbers.formatCurrency(dejaPaye)}"></span> Ariary</h5>
+            <h5 class="card-title" th:if="${dejaPaye==null}">MONTANT DEJA PAYE :<span  class="btn btn-outline-primary" >0.0</span> Ariary</h5>
           </div>
         </div>
       </div>
@@ -80,7 +83,7 @@
     datasets: [{
       label:"Mois",
       data: valeurs,
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+      backgroundColor: ['#4BC0C0']
     }]
   };
 

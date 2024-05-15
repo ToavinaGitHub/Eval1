@@ -35,6 +35,7 @@
                                 <h5 class="card-title" th:text="${typeMaison.getDesignation()}"></h5>
                                 <p class="card-text">Prix : <span th:text="${#numbers.formatCurrency(typeMaison.getPrix())}"> AR</span></p>
                                 <p class="card-text">Duration: <span th:text="${typeMaison.getDuree()}"> jours</span></p>
+                                <p class="card-text">Descritpion: <span th:text="${typeMaison.getDescription()}"> jours</span></p>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="typeMaison"  th:value="${typeMaison.getIdTypeMaison()}" th:id="${typeMaison.getIdTypeMaison()}">
                                     <label class="form-check-label" th:for="${typeMaison.getIdTypeMaison()}">
@@ -74,6 +75,14 @@
                     <div class="col-12">
                         <label for="datyDebut" class="form-label">Date debut travaux : *</label>
                         <input type="date"  th:field="*{debut}" class="form-control" id="datyDebut" data-parsley-trigger="change" required="">
+                    </div>
+                    <div class="col-12">
+                        <label for="lieu" class="form-label">Lieu : *</label>
+                        <input type="text"  th:field="*{lieu}" class="form-control" id="lieu" data-parsley-trigger="change" required="">
+                    </div>
+                    <div class="col-12">
+                        <label for="refConstr" class="form-label">Ref construction : *</label>
+                        <input type="text"  th:field="*{refConstruction}" class="form-control" id="refConstr" data-parsley-trigger="change" required="">
                     </div>
                     <hr>
                     <div class="col-12">

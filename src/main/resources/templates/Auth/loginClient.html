@@ -24,14 +24,12 @@
                                 </div>
                                 <form id="formValidation" class="row g-3"  method="post" th:action="@{/loginClient}" th:object="${utilisateur}"  data-parsley-validate="">
                                     <div class="col-12">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="text" th:field="*{contact}" data-parsley-pattern="^(020|032|033|034|038)\d{7}$" class="form-control" id="email" data-parsley-trigger="change" required="">
+                                        <label for="email" class="form-label">Contact</label>
+                                        <!--data-parsley-pattern="^(020|032|033|034|038)\d{7}$" -->
+                                        <input type="text" th:field="*{contact}"  class="form-control" id="email" data-parsley-trigger="change" required="">
                                     </div>
                                     <div class="col-12">
                                         <input class="btn btn-primary w-100" type="submit" value="Login">
-                                    </div>
-                                    <div class="col-12">
-                                        <p class="small mb-0">Don't have account? <a th:href="@{'/insc'}">Create an account</a></p>
                                     </div>
                                 </form>
                             </div>

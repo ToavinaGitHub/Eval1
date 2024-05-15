@@ -7,6 +7,7 @@ import com.eval1.mg.Model.Utilisateur;
 import com.eval1.mg.Repository.UtilisateurRepository;
 
 import com.eval1.mg.Security.CustomUserDetails;
+import com.eval1.mg.Service.ReinitialisationBaseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -41,7 +42,10 @@ public class UtilisateurController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@GetMapping("/")
+	@Autowired
+	ReinitialisationBaseService reinitialisationBaseService;
+
+	@GetMapping("/loginMilay")
 	public String login(Model model) throws ValeurInvalideException, IOException {
 		Utilisateur u = new Utilisateur();
 		u.setEmail("toavina@gmail.com");
@@ -51,10 +55,10 @@ public class UtilisateurController {
 		return "Auth/login";
 	}
 
-	@GetMapping("/loginClient")
+	@GetMapping("/")
 	public String loginClient(Model model) throws ValeurInvalideException, IOException {
 		Utilisateur u = new Utilisateur();
-		u.setContact("0347868489");
+		u.setContact("0340590098");
 		model.addAttribute("utilisateur",u);
 
 		return "Auth/loginClient";
@@ -63,6 +67,7 @@ public class UtilisateurController {
 	@PostMapping("/loginClient")
 	public String loginClient(Utilisateur u, RedirectAttributes redirectAttributes, HttpSession session, HttpServletRequest request){
 
+		u.setContact(u.getContact().trim());
 		Utilisateur user = utilisateurRepository.findUtilisateurByContact(u.getContact());
 
 		if(user==null){
@@ -91,7 +96,7 @@ public class UtilisateurController {
 		System.out.println(user.getContact());
 
 		// Redirigez vers la page d'accueil ou toute autre page appropriée
-		return "redirect:/v1/accueil";
+		return "redirect:/v1/construction/user";
 	}
 
 
@@ -101,7 +106,7 @@ public class UtilisateurController {
 		Utilisateur user  = utilisateurRepository.findUtilisateurByEmail(u.getEmail());
 		if(user==null || !passwordEncoder.matches(u.getPassword(),user.getPassword())){
 			redirectAttributes.addFlashAttribute("error" , "Mot de passe ou email non valide");
-			return "redirect:/";
+			return "redirect:/loginMilay";
 		}
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(u.getEmail(), u.getPassword());
 
@@ -116,7 +121,7 @@ public class UtilisateurController {
 		session.setAttribute("user" , user);
 
 
-		return "redirect:/v1/accueil";
+		return "redirect:/v1/construction/admin";
 	}
 
 	@GetMapping("/v1/accueil")
@@ -154,7 +159,7 @@ public class UtilisateurController {
 
 		utilisateurRepository.save(u);
 		redirectAttributes.addFlashAttribute("message" , "Inscription avec succes");
-		return "redirect:/";
+		return "redirect:/loginClient";
 	}
 
 	@GetMapping("/deco")
@@ -163,7 +168,7 @@ public class UtilisateurController {
 		HttpSession s = request.getSession(true);
 		session.removeAttribute(SPRING_SECURITY_CONTEXT_KEY);
 		redirectAttributes.addFlashAttribute("message" ,"Veuillez vous reconnecter");
-		return "redirect:/";
+		return "redirect:/loginClient";
 	}
 
 	@GetMapping("/error/403")
@@ -174,4 +179,29 @@ public class UtilisateurController {
 	public String error404(){
 		return "Auth/404Error";
 	}
+
+
+	@GetMapping("/reinitialiserBase")
+	public String reinitialiserBase(RedirectAttributes redirectAttributes) {
+
+
+		Utilisateur u =new Utilisateur();
+		u.setProfil(Profil.ADMIN);
+
+		try{
+			reinitialisationBaseService.desactiverContraintes();
+			reinitialisationBaseService.effacerDonneesToutesEntites(u);
+
+			utilisateurRepository.deleteUtilisateurByProfil("CLIENT");
+
+			reinitialisationBaseService.reactiverContraintes();
+		}catch (Exception e){
+			redirectAttributes.addFlashAttribute("error" ,e.getMessage());
+			return "redirect:/loginMilay";
+		}
+		redirectAttributes.addFlashAttribute("message" ,"Reinitialisation avec succes");
+		return "redirect:/loginMilay";
+	}
+
+
 }

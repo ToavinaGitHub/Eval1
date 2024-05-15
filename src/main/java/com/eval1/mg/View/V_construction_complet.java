@@ -30,4 +30,11 @@ public interface V_construction_complet {
 
     String getDesignationEtat();
 
+    double getPourcPaye();
+
+    String getLieu();
+
+    String getRefConstruction();
+
+
 }

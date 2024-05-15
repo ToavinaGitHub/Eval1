@@ -2,6 +2,7 @@ package com.eval1.mg.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,7 @@ public class Payement {
     double montant;
 
     int etat;
+
+    @NotBlank(message = "Reference paiement ne doit pas etre vide")
+    String refPayement;
 }

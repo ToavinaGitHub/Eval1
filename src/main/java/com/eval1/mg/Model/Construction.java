@@ -49,7 +49,6 @@ public class Construction {
             //Total travaux + finition
     double montantTotal;
 
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date daty;
 
@@ -59,7 +58,6 @@ public class Construction {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date fin;
 
-
     @ManyToOne
             @JoinColumn(name = "id_etat_construction",nullable = true)
     EtatConstruction etatConstruction;
@@ -68,6 +66,15 @@ public class Construction {
 
     @Transient
     String etatString;
+
+    @NotBlank(message = "Reference construction ne doit pas etre vide")
+    String refConstruction;
+
+    @NotBlank(message = "Lieu ne doit pas etre vide")
+    String lieu;
+
+    @Min(value = 0,message = "Prix maison doit etre superieur a 0")
+    double prixMaison;
 
     public Construction(String id, String demande, Date daty, int etat) {
         this.id = id;
@@ -88,4 +95,5 @@ public class Construction {
         this.etat = etat;
         this.etatString = EtatConfiguration.getEtatConstruction(etat);
     }
+
 }

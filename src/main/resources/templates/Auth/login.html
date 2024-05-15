@@ -5,6 +5,27 @@
 <body>
 <main>
     <div class="container">
+
+        <div class="modal fade text-center" id="confirmModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Reinitialiser base </h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span id="confirmText"></span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a type="button" id="yesBtn" class="btn btn-danger">Yes</a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Affichage message-->
         <div th:replace="~{fragments/message :: MessageAlert}"></div>
         <!-- Fin Affichage message-->
@@ -29,7 +50,7 @@
                                     </div>
                                     <div class="col-12">
                                         <label for="password" class="form-label">Password</label>
-                                        <input type="password" th:field="*{password}" value="admin" class="form-control" id="password" required>
+                                        <input type="password" th:field="*{password}"  class="form-control" id="password" required>
                                         <div class="invalid-feedback">Please enter your password!</div>
                                     </div>
 
@@ -43,6 +64,9 @@
                                     <div class="col-12 align-content-center">
                                         <p class="small mb-0"><a th:href="@{'/loginClient'}">Login client</a></p>
                                     </div>
+                                    <div class="col-12 align-content-center">
+                                        <p class="small mb-0"><a class="btn-reinitialiser" th:href="@{'/reinitialiserBase'}">Reinitialiser base</a></p>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -55,6 +79,22 @@
 </main>
 </body>
 <div th:replace="~{fragments/script :: script}"></div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".btn-reinitialiser").on("click", function(e) {
+            e.preventDefault();
+            var link = $(this);
+            $("#yesBtn").attr("href", link.attr("href"));
+            $("#confirmText").html("Do you want to delete ?");
+            $("#confirmModal").modal("show"); // Show the modal
+        });
+
+        // Handle click event for the close button within the modal
+        $("#confirmModal .close, #confirmModal .btn-secondary").on("click", function() {
+            $("#confirmModal").modal("hide"); // Hide the modal
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         $('#formValidation').parsley();

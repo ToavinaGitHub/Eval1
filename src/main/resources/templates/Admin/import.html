@@ -1,0 +1,82 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='construction')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header(title='Construction')}"></header>
+<aside th:replace="~{fragments/aside :: aside}"></aside>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>construction</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">construction</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <!-- Affichage message-->
+        <div th:replace="~{fragments/message :: MessageAlert}"></div>
+        <!-- Fin Affichage message-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-title">
+                        <h5>Importation donnée</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="row g-6" method="post" th:action="@{'/v1/importCsv/maisonTravauxDevis'}" encType="multipart/form-data">
+                            <div class="col-md-12">
+                                <label for="inputName5" class="form-label">Maison et travaux : </label>
+                                <input type="file" name="fileMaisonTravaux" class="form-control" id="inputName5" data-parsley-trigger="change" required="" >
+                            </div>
+                            <div class="col-md-12">
+                                <label for="devis" class="form-label">Devis : </label>
+                                <input type="file" name="fileDevis" class="form-control" id="devis" data-parsley-trigger="change" required="" >
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Submit">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-title">
+                        <h5>Importation paiement</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="row g-6" th:action="@{'/v1/importCsv/paiement'}" method="post" encType="multipart/form-data">
+                            <div class="col-md-12">
+                                <label for="payement" class="form-label">Paiement : </label>
+                                <input type="file" name="filePayement" class="form-control" id="payement" data-parsley-trigger="change" required="" >
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Submit">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<div th:replace="~{fragments/script :: script}"></div>
+<!--delete modal -->
+<div th:replace="~{fragments/DeleteConfirmation :: Delete}"></div>
+<!-- fin delete modal -->
+<script>
+    $(document).ready(function() {
+        $('#formValidation').parsley();
+    });
+
+</script>
+
+</html>

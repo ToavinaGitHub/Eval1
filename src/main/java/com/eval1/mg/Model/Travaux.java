@@ -29,7 +29,7 @@ public class Travaux {
     double quantite;
     @Min(value = 0, message = "Montant total doit être supérieur à zéro")
     double montantTotal;
-    @NotBlank(message = "Etat travaux ne doit pas etre null")
+
     int etat;
 
     @ManyToOne
@@ -37,7 +37,7 @@ public class Travaux {
     Devis devis;
 
     @ManyToOne
-            @JoinColumn(name = "id_type_travail",nullable = false)
+            @JoinColumn(name = "id_type_travail",nullable = true)
     TypeTravail typeTravail;
 
     @ManyToOne

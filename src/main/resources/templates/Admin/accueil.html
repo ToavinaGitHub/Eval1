@@ -6,6 +6,16 @@
 <header th:replace="~{fragments/header :: header(title='Construction')}"></header>
 <aside th:replace="~{fragments/aside :: aside}"></aside>
 
+<style>
+
+    .red{
+        background-color: red;
+    }
+    .green{
+        background-color: green;
+    }
+</style>
+
 <main id="main" class="main">
     <div class="pagetitle">
         <h1>construction</h1>
@@ -48,33 +58,43 @@
                             <thead>
                             <tr>
                                 <th scope="col">#</th>
+                                <th scope="col">Contact</th>
+                                <th scope="col">Ref.Construction</th>
                                 <th scope="col">Type Maison</th>
+                                <th scope="col">Lieu</th>
                                 <th scope="col">Type finition</th>
                                 <th scope="col">Date de creation</th>
                                 <th scope="col">Date debut travaux</th>
                                 <th scope="col">Date fin travaux</th>
                                 <th scope="col">Montant total</th>
                                 <th scope="col">Deja paye</th>
+                                <th scope="col">Pourcentage deja payé</th>
                                 <th scope="col">Reste a payé</th>
                                 <th scope="col">Etat</th>
                                 <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="construction : ${constructions}">
+                            <tr th:each="construction : ${constructions}" >
                                 <th scope="row" th:text="${construction.getIdConstruction()}"></th>
+                                <td  th:text="${construction.getContactUser()}"></td>
+                                <td  th:text="${construction.getRefConstruction()}"></td>
                                 <td th:text="${construction.getDesignationMaison()}"></td>
+                                <td th:text="${construction.getLieu()}"></td>
                                 <td th:text="${construction.getDesignationFinition()}"></td>
                                 <td th:text="${#dates.format(construction.getDaty(), 'yyyy-MM-dd')}"></td>
                                 <td th:text="${#dates.format(construction.getDebut(),'yyyy-MM-dd')}"></td>
                                 <td th:text="${#dates.format(construction.getFin(),'yyyy-MM-dd')}"></td>
-                                <td th:text="${#numbers.formatCurrency(construction.getTotal())}"></td>
-                                <td th:text="${#numbers.formatCurrency(construction.getDejaPaye())}"></td>
-                                <td th:text="${#numbers.formatCurrency(construction.getReste())}"></td>
+                                <td th:text="${#numbers.formatDecimal(construction.getTotal(),1,'COMMA',2,'POINT')}"></td>
+                                <td th:text="${#numbers.formatDecimal(construction.getDejaPaye(),1,'COMMA',2,'POINT')}"></td>
+                                <td th:if="${construction.getPourcPaye()<50}" th:text="${#numbers.formatDecimal(construction.getPourcPaye(),1,'COMMA',6,'POINT')}" style="background-color: red"></td>
+                                <td th:if="${construction.getPourcPaye()>50}" th:text="${#numbers.formatDecimal(construction.getPourcPaye(),1,'COMMA',6,'POINT')}" style="background-color: green"></td>
+                                <td th:if="${construction.getPourcPaye()==50}" th:text="${#numbers.formatDecimal(construction.getPourcPaye(),1,'COMMA',6,'POINT')}" ></td>
+
+                                <td th:text="${#numbers.formatDecimal(construction.getReste(),1,'COMMA',2,'POINT')}"></td>
                                 <td th:text="${construction.getDesignationEtat()}"></td>
                                 <td>
                                     <a th:href="@{'/v1/construction/admin/details?idConstruction='+${construction.getIdConstruction()}}"><button class="btn btn-outline-primary">Voir details</button></a>
-                                    <a><button class="btn btn-outline-primary">Exporter PDF</button></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -84,7 +104,7 @@
             </div>
 
             <!-- Pagination -->
-            <nav th:replace="~{fragments/Pagination :: Pagination('/v1/construction/user')}">
+            <nav th:replace="~{fragments/Pagination :: Pagination('/v1/construction/admin')}">
             </nav>
             <!-- Fin Pagination -->
 

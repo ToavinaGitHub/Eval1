@@ -19,13 +19,22 @@
     <section class="section">
         <!-- Affichage message-->
         <div th:replace="~{fragments/message :: MessageAlert}"></div>
+
+        <div style="display: none"   class="alert alert-success alert-dismissible fade show text-center message"
+             role="alert" id="succ">
+
+        </div>
+        <div  style="display: none" class="alert alert-danger alert-dismissible fade show text-center message"
+              role="alert" id="err">
+        </div>
         <!-- Fin Affichage message-->
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-title">Ajout de payement</div>
                     <div class="card-body">
-                        <form id="formValidation" class="row g-3" method="post" th:action="@{'/v1/payement/addPayement'}" data-parsley-validate="">
+                        <!-- th:action="@{'/v1/payement/addPayement'}"-->
+                        <form id="formValidation" class="row g-3" method="post"  data-parsley-validate="">
                             <input type="hidden" name="idConstruction" th:value="${construction.getId()}">
                             <div class="payment">
                                 <div class="row">
@@ -37,6 +46,11 @@
                                         <label for="montant" class="form-label">Montant</label>
                                         <input type="text" class="form-control" id="montant" name="montant" required>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label for="montant" class="form-label">Payement : *</label>
+                                        <input type="text" class="form-control" id="payement" name="payement" required>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="col-12" id="addPaymentContainer">
@@ -55,8 +69,6 @@
             </nav>
             <!-- Fin Pagination -->
 
-
-
         </div>
     </section>
 
@@ -67,6 +79,49 @@
 <div th:replace="~{fragments/script :: script}"></div>
 <!--delete modal -->
 <div th:replace="~{fragments/DeleteConfirmation :: Delete}"></div>
+
+<script>
+    $(document).ready(function() {
+
+        $('#formValidation').submit(function(event) {
+
+            event.preventDefault();
+
+            var err = document.getElementById("err");
+            err.style.display = "none";
+            err.textContent = "";
+
+            var succ = document.getElementById("succ");
+            succ.style.display = "none";
+            succ.textContent = "";
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/v1/payement/addPayementAjax',
+                data: formData,
+                success: function(response) {
+
+                    if(response.error){
+                        run = false
+                        var err = document.getElementById("err");
+                        err.style.display = "block";
+                        err.textContent = response.error;
+                    }
+                    var succ = document.getElementById("succ");
+                    succ.style.display = "block";
+                    succ.textContent = response.message;
+
+                    $('#formValidation').trigger("reset");
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+</script>
+
 
 <script>
     document.getElementById("addPayment").addEventListener("click", function (event) {
