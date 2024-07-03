@@ -1,7 +1,4 @@
 ----------- SET id seq for tables----------------
-
-
-
 CREATE SEQUENCE utilisateur_id_seq START 1;
 CREATE OR REPLACE FUNCTION generate_utilisateur_id() RETURNS VARCHAR AS $$
 DECLARE
@@ -248,8 +245,6 @@ CREATE OR REPLACE VIEW v_somme_travaux_typeMaison as
 select type_maison,sum(prix_unitaire*quantite) somme from travaux_maison_csv GROUP BY type_maison;
 
 
-select * from v_
-
 select * from v_somme_travaux_typeMaison;
 
 select c.type_maison,duree_travaux,1 as etat,v.somme,c.description,c.surface as prix  from travaux_maison_csv c join v_somme_travaux_typeMaison v on c.type_maison=v.type_maison;
@@ -325,17 +320,9 @@ join construction cons on c.ref_construction=cons.ref_construction;
 
 select c.date_paiement,1 as etatP,c.montant,cons.id , c.ref_paiement from payement_csv c join construction cons on c.ref_construction=cons.ref_construction left join payement p on p.ref_payement=c.ref_paiement where p.ref_payement is null group by c.date_paiement, etatP, c.montant, cons.id, c.ref_paiement;
 
-
-
 insert into payement(daty, etat, montant, id_construction, ref_payement)(select c.date_paiement,1 as etatP,c.montant,cons.id , c.ref_paiement from payement_csv c join construction cons on c.ref_construction=cons.ref_construction left join payement p on p.ref_payement=c.ref_paiement where p.ref_payement is null group by c.date_paiement, etatP, c.montant, cons.id, c.ref_paiement);
-
-
-
-
-
 select *
 from construction_csv;
-
 -----
 
 select c.date_devis as dateDevis,c.date_debut as dateDebut,'ha' as demande,0 as etat,tp.prix+((tp.prix*tf.augmentation)/100) as montantTotal,d.id as idDevis,tf.id as idTypeFinition,us.id as idUser,tf.augmentation as augmentation,tp.duree as duree,0 as idEtat,c.ref_construction as refConstruction,c.lieu as lieu from construction_csv c join type_maison tp on tp.designation=c.type_maison join type_finition tf on tf.designation=c.finition  join utilisateur us on us.contact=c.client join devis d on d.designation=concat('Devis',c.type_maison) left join construction cons on cons.ref_construction=c.ref_construction where cons.ref_construction is null group by c.date_devis, c.date_debut,fin, tp.prix, d.id, tf.id, us.id, tf.augmentation, tp.duree, idEtat,c.ref_construction, c.lieu;
@@ -344,5 +331,65 @@ select c.date_devis as dateDevis,c.date_debut as dateDebut,'ha' as demande,0 as 
 ----
 SELECT * from v_construction_complet;
 
-
 SELECT refconstruction,lieu,pourcpaye,idConstruction,daty,debut,demande,etat,fin,total,dejaPaye,idDevis,idTypeFinition,pourcentageFinition,reste,idUtilisateur,designationMaison,designationFinition,contactUser,duree,designationetat from v_construction_complet where refConstruction='D001';
+
+
+------------------------------- Note S6 --------------------------------
+
+CREATE OR REPLACE FUNCTION historiserTypeFinition()
+    RETURNS TRIGGER AS $$
+BEGIN
+    -- Insérer les données modifiées dans la table d'historique
+    INSERT INTO historique_type_finition(augmentation, daty, designation, id_type_finition)
+    VALUES (NEW.augmentation, now(),NEW.designation, NEW.id);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS historiser_type_finition_trigger ON type_finition;
+
+CREATE TRIGGER historiser_type_finition_trigger
+    AFTER INSERT OR UPDATE OF augmentation,designation
+    ON type_finition
+    FOR EACH ROW
+EXECUTE FUNCTION historiserTypeFinition();
+
+DROP PROCEDURE inscription(contact VARCHAR, dateNaissance date, email varchar, genre integer, nom varchar, password varchar, prenom varchar, profil integer);
+
+CREATE OR REPLACE PROCEDURE inscription(
+    contact VARCHAR,
+    dateNaissance date,
+    email varchar,
+    genre integer,
+    nom varchar,
+    password varchar,
+    prenom varchar,
+    profil integer,
+    OUT result integer
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF profil = '-1' THEN
+        INSERT INTO utilisateur (contact, date_naissance, email, genre, nom, password, prenom, profil)
+        VALUES (contact,dateNaissance,email,genre,nom,password,prenom,'CLIENT');
+        result:=1;
+    ELSIF profil = '1' THEN
+        INSERT INTO utilisateur (contact, date_naissance, email, genre, nom, password, prenom, profil)
+        VALUES (contact,dateNaissance,email,genre,nom,password,prenom,'ADMIN');
+        result:=1;
+    ELSE
+        result:=0;
+        RAISE EXCEPTION 'Utilisez "-1" pour client ou "1" pour admin.';
+    END IF;
+END
+$$;
+
+
+CALL inscription('0345670890',null,null,1,null,null,null,-1,null);
+
+DROP INDEX index_construction_travaux;
+CREATE INDEX index_construction_travaux on travaux_construction(id_construction);
+
+SELECT * from travaux_construction where id_construction='CONSTR0000161';

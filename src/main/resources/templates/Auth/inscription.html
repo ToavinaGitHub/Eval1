@@ -55,12 +55,12 @@
                                     </div>
                                     <div class="col-12">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="email" th:field="*{email}" data-parsley-pattern="^[a-zA-Z0-9._%+-^]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" value="admin@gmail.com" class="form-control" id="email" data-parsley-trigger="change" required="">
+                                        <input type="email" th:field="*{email}" data-parsley-pattern="^[a-zA-Z0-9._%+-^]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" value="admin@gmail.com" class="form-control" id="email" data-parsley-trigger="change" >
                                     </div>
                                     <div class="col-12">
                                         <label for="password" class="form-label">Password</label>
                                         <input type="password" data-parsley-minlength="4" data-parsley-maxlength="10"
-                                                th:field="*{password}" class="form-control" id="password" required>
+                                                th:field="*{password}" class="form-control" id="password" >
                                     </div>
                                     <div class="col-12">
                                         <label for="tel" class="form-label">Telephone</label>

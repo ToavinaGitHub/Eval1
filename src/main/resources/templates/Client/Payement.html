@@ -8,7 +8,7 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>construction</h1>
+        <h1>Construction BTP </h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -19,10 +19,8 @@
     <section class="section">
         <!-- Affichage message-->
         <div th:replace="~{fragments/message :: MessageAlert}"></div>
-
         <div style="display: none"   class="alert alert-success alert-dismissible fade show text-center message"
              role="alert" id="succ">
-
         </div>
         <div  style="display: none" class="alert alert-danger alert-dismissible fade show text-center message"
               role="alert" id="err">
@@ -82,9 +80,7 @@
 
 <script>
     $(document).ready(function() {
-
         $('#formValidation').submit(function(event) {
-
             event.preventDefault();
 
             var err = document.getElementById("err");
@@ -119,10 +115,7 @@
             });
         });
     });
-
 </script>
-
-
 <script>
     document.getElementById("addPayment").addEventListener("click", function (event) {
         event.preventDefault(); // Empêcher la soumission du formulaire

@@ -138,11 +138,13 @@ public class UtilisateurController {
 
 	@PostMapping("/inscription")
 	public String inscription(@Valid Utilisateur u, BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpSession session, HttpServletRequest request){
-		Utilisateur user  = utilisateurRepository.findUtilisateurByEmail(u.getEmail());
+		if(u.getEmail()!=null){
+			Utilisateur user  = utilisateurRepository.findUtilisateurByEmail(u.getEmail());
 
-		if(user != null){
-			redirectAttributes.addFlashAttribute("error" , "Email deja prise");
-			return "redirect:/insc";
+			if(user != null){
+				redirectAttributes.addFlashAttribute("error" , "Email deja prise");
+				return "redirect:/insc";
+			}
 		}
 
 		if(bindingResult.hasErrors()){
@@ -157,9 +159,19 @@ public class UtilisateurController {
 
 		u.setPassword(passwordEncoder.encode(u.getPassword()));
 
-		utilisateurRepository.save(u);
+		int number_profil = -1;
+		if(u.getProfil().equals(Profil.ADMIN)) {
+			number_profil = 1;
+		}
+
+		int result = utilisateurRepository.inscription(u.getContact(),u.getDateNaissance(),u.getEmail(),u.getGenre(),u.getNom(),u.getPassword(),u.getPrenom(),number_profil);
+		//utilisateurRepository.save(u);
+		if(result==0){
+			redirectAttributes.addFlashAttribute("error" , "Admin ou client?");
+			return "redirect:/";
+		}
 		redirectAttributes.addFlashAttribute("message" , "Inscription avec succes");
-		return "redirect:/loginClient";
+		return "redirect:/";
 	}
 
 	@GetMapping("/deco")

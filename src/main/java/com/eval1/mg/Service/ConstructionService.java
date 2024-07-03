@@ -12,6 +12,9 @@ import java.util.List;
 public class ConstructionService {
 
 
+
+
+
     public HashMap<TypeTravail, List<TravauxConstruction>> getTravauxParTravail(List<TravauxConstruction> all){
 
         HashMap<TypeTravail,List<TravauxConstruction>> res = new HashMap<>();
